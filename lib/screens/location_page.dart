@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/model/weather_model.dart';
+import 'package:weather_app/screens/city_page.dart';
 import 'package:weather_app/utilities/constant.dart';
 
 class LocationScreen extends StatefulWidget {
@@ -25,17 +26,23 @@ class _LocationScreenState extends State<LocationScreen> {
 
   void updateWeater(dynamic weatherdata) {
     setState(() {
-       double temp = weatherdata['main']['temp'];
-    temparture = temp.toInt();
+      if (weatherdata == null) {
+        temparture = 0;
+        weatherIcon = 'error';
+        description = 'unable to get data';
+        cityname = '';
+        return;
+      }
+      double temp = weatherdata['main']['temp'];
+      temparture = temp.toInt();
 
-    var condition = weatherdata['weather'][0]['id'];
-    weatherIcon = weatherModel.getWeatherIcon(condition);
+      var condition = weatherdata['weather'][0]['id'];
+      weatherIcon = weatherModel.getWeatherIcon(condition);
 
-    description = weatherModel.getMessage(temparture);
+      description = weatherModel.getMessage(temparture);
 
-    cityname = weatherdata['name'];
+      cityname = weatherdata['name'];
     });
-   
   }
 
   @override
@@ -60,14 +67,32 @@ class _LocationScreenState extends State<LocationScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   FlatButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      var locationdata =
+                          await weatherModel.getLocationWeather();
+                      updateWeater(locationdata);
+                      print('iam tapped');
+                    },
                     child: Icon(
                       Icons.near_me,
                       size: 50.0,
                     ),
                   ),
                   FlatButton(
-                    onPressed: () {},
+                    onPressed: () async{
+                     var getweather=  await Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) {
+
+                          return CityPage();
+                        }),
+                      );
+                        if(getweather != null)
+                        {
+                          var weatherdata = await weatherModel.getinputlocation(getweather);
+                          updateWeater(weatherdata);
+                        }
+                    },
                     child: Icon(
                       Icons.location_city,
                       size: 50.0,

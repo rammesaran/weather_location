@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/model/weather_model.dart';
 import 'package:weather_app/screens/location_page.dart';
-import 'package:weather_app/services/location.dart';
-import 'package:weather_app/services/networking.dart';
+
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-const apikey = 'eb5f758d4731d8768ff1157056765023';
 
 class LandingPage extends StatefulWidget {
   @override
@@ -21,14 +20,9 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   void getlocation() async {
-    Location location = Location();
-    await location.getuserlocation();
-
-
-    NetworkingWeather networkingWeather = NetworkingWeather(
-        'https://api.openweathermap.org/data/2.5/weather?lat=${location.latitiude}&lon=${location.longitiude}&units=metric&appid=$apikey');
-
-    var weatherdata = await networkingWeather.getnetworkweather();
+    WeatherModel weatherModel = WeatherModel();
+    var weatherdata = await weatherModel.getLocationWeather();
+    
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) {

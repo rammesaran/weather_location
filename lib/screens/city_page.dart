@@ -7,6 +7,7 @@ class CityPage extends StatefulWidget {
 }
 
 class _CityPageState extends State<CityPage> {
+  String cityname;
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -24,7 +25,9 @@ class _CityPageState extends State<CityPage> {
               Align(
                 alignment: Alignment.topLeft,
                 child: FlatButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                   child: Icon(
                     Icons.arrow_back_ios,
                     size: 50.0,
@@ -33,10 +36,19 @@ class _CityPageState extends State<CityPage> {
               ),
               Container(
                 padding: EdgeInsets.all(20.0),
-                child: null,
+                child: TextFormField(
+                  style: TextStyle(color: Colors.black),
+                  decoration:kTextInputStle,
+                  onChanged: (String value){
+                    cityname = value;                    
+                  },
+                   
+                ),
               ),
               FlatButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pop(context, cityname);
+                },
                 child: Text(
                   'Get Weather',
                   style: kButtonTextStyle,
